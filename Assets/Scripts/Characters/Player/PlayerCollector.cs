@@ -10,13 +10,7 @@ public class PlayerCollector : MonoBehaviour
     {
         if (collision.gameObject.TryGetComponent(out ICollectable collectable))
         {
-            collectable.Collect();
-
-            if (collectable is Coin coin)
-            {
-                CoinCollected?.Invoke(collectable.Value);
-                coin.gameObject.SetActive(false);
-            }
+            Collect(collectable);
         }
     }
 
@@ -24,13 +18,22 @@ public class PlayerCollector : MonoBehaviour
     {
         if (collision.gameObject.TryGetComponent(out ICollectable collectable))
         {
-            collectable.Collect();
+            Collect(collectable);
+        }
+    }
 
-            if (collectable is AidKit aidKit)
-            {
-                AidKitCollected?.Invoke(collectable.Value);
-                aidKit.gameObject.SetActive(false);
-            }
+    private void Collect(ICollectable collectable)
+    {
+        if (collectable is Coin coin)
+        {
+            CoinCollected?.Invoke(collectable.Value);
+            coin.Collect();
+        }
+
+        if (collectable is AidKit aidKit)
+        {
+            AidKitCollected?.Invoke(collectable.Value);
+            aidKit.gameObject.SetActive(false);
         }
     }
 }

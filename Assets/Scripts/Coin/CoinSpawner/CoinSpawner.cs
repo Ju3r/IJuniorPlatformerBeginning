@@ -16,7 +16,6 @@ public class CoinSpawner : MonoBehaviour
     [SerializeField] private float _spawnRate = 1f;
 
     private ObjectPool<Coin> _pool;
-    private bool _isActive = true;
     private List<Coin> _allCoins = new List<Coin>();
 
     private void Awake()
@@ -34,11 +33,6 @@ public class CoinSpawner : MonoBehaviour
         StartCoroutine(Spawning());
     }
 
-    private void OnEnable()
-    {
-        _isActive = true;
-    }
-
     private void OnDisable()
     {
         foreach (Coin coin in _allCoins)
@@ -50,7 +44,6 @@ public class CoinSpawner : MonoBehaviour
         }
 
         _allCoins.Clear();
-        _isActive = false;
     }
 
     private Coin Create()
@@ -65,7 +58,7 @@ public class CoinSpawner : MonoBehaviour
     {
         WaitForSeconds spawnWait = new WaitForSeconds(_spawnRate);
 
-        while (_isActive)
+        while (enabled)
         {
             if (_pool.CountActive < _poolMaxSize)
                 _pool.Get();

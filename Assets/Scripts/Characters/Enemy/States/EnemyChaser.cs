@@ -9,7 +9,6 @@ public class EnemyChaser : MonoBehaviour
 
     private bool _isActive = false;
     private CharacterMover _mover;
-    private Transform _target;
     private Coroutine _coroutine;
 
     private void Awake()
@@ -22,8 +21,7 @@ public class EnemyChaser : MonoBehaviour
         if (gameObject.activeInHierarchy && _coroutine == null)
         {
             _isActive = true;
-            _target = target;
-            _coroutine = StartCoroutine(Chasing());
+            _coroutine = StartCoroutine(Chasing(target));
         }
     }
 
@@ -33,23 +31,23 @@ public class EnemyChaser : MonoBehaviour
 
         if (_coroutine != null)
         {
-            StopCoroutine(Chasing());
+            StopCoroutine(_coroutine);
             _coroutine = null;
         }
     }
 
-    private IEnumerator Chasing()
+    private IEnumerator Chasing(Transform target)
     {
         bool _isChasing = true;
 
-        while (_isActive && _target != null)
+        while (_isActive && target != null)
         {
-            Vector2 offset = _target.position - transform.position;
+            Vector2 offset = target.position - transform.position;
             Vector2 direction = offset.normalized;
 
             RaycastHit2D hit = Physics2D.Raycast(transform.position, direction, _raycastDistance, _raycastLayers);
 
-            if (hit.collider != null && hit.collider.transform == _target)
+            if (hit.collider != null && hit.collider.transform == target)
                 _mover.Move(direction.x, _isChasing);
 
             yield return null;
