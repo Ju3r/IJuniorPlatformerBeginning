@@ -2,10 +2,9 @@ using System;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
-public class Coin : MonoBehaviour 
+public class Coin : MonoBehaviour, ICollectable
 {
-    [SerializeField] private bool _isCollected = false;
-
+    private bool _isCollected = false;
     private Rigidbody2D _rigidbody;
 
     public event Action<Coin> Collected;
@@ -47,10 +46,5 @@ public class Coin : MonoBehaviour
 
         _isCollected = true;
         Collected?.Invoke(this);
-    }
-
-    public void Destroy()
-    {
-        Destroy(gameObject);
     }
 }

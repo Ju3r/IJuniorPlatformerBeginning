@@ -1,20 +1,21 @@
 using System.Collections;
 using UnityEngine;
 
-[RequireComponent(typeof(EnemyMover))]
-public class EnemyPatrol : MonoBehaviour
+[RequireComponent(typeof(CharacterMover))]
+public class EnemyPatroller : MonoBehaviour
 {
     [SerializeField] private Waypoint[] _waypoints;
     [SerializeField] private float _minInaccuracySqr = 0.4f;
 
     private bool _isActive = false;
-    private EnemyMover _mover;
+    private CharacterMover _mover;
     private Transform _targetPoint;
     private int _currentPointIndex = 0;
+    private Coroutine _coroutine;
 
     private void Awake()
     {
-        _mover = GetComponent<EnemyMover>();
+        _mover = GetComponent<CharacterMover>();
     }
 
     public void Init()
@@ -24,17 +25,22 @@ public class EnemyPatrol : MonoBehaviour
 
     public void StartPatrol()
     {
-        if (gameObject.activeInHierarchy)
+        if (gameObject.activeInHierarchy && _coroutine == null)
         {
             _isActive = true;
-            StartCoroutine(Patrolling());
+            _coroutine = StartCoroutine(Patrolling());
         }
     }
 
     public void StopPatrol()
     {
         _isActive = false;
-        StopCoroutine(Patrolling());
+
+        if (_coroutine != null)
+        {
+            StopCoroutine(Patrolling());
+            _coroutine = null;
+        }
     }
 
     private IEnumerator Patrolling()
@@ -55,5 +61,7 @@ public class EnemyPatrol : MonoBehaviour
 
             yield return null;
         }
+
+        _coroutine = null;
     }
 }

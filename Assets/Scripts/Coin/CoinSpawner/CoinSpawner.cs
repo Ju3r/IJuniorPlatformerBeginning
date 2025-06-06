@@ -97,6 +97,6 @@ public class CoinSpawner : MonoBehaviour
     {
         coin.Collected -= OnCollected;
         _allCoins.Remove(coin);
-        coin.Destroy();
+        Destroy(coin);
     }
 }

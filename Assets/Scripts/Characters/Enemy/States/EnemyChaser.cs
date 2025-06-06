@@ -1,33 +1,41 @@
 using System.Collections;
 using UnityEngine;
 
-[RequireComponent(typeof(EnemyMover))]
-public class EnemyChase : MonoBehaviour
+[RequireComponent(typeof(CharacterMover))]
+public class EnemyChaser : MonoBehaviour
 {
     [SerializeField] private float _raycastDistance = 10f;
+    [SerializeField] private LayerMask _raycastLayers;
 
-    private LayerMask _raycastLayers;
     private bool _isActive = false;
-    private EnemyMover _mover;
+    private CharacterMover _mover;
     private Transform _target;
+    private Coroutine _coroutine;
 
     private void Awake()
     {
-        _mover = GetComponent<EnemyMover>();
-        _raycastLayers = LayerMask.GetMask("Player", "Obstacle");
+        _mover = GetComponent<CharacterMover>();
     }
 
     public void StartChase(Transform target)
     {
-        _isActive = true;
-        _target = target;
-        StartCoroutine(Chasing());
+        if (gameObject.activeInHierarchy && _coroutine == null)
+        {
+            _isActive = true;
+            _target = target;
+            _coroutine = StartCoroutine(Chasing());
+        }
     }
 
     public void StopChase()
     {
         _isActive = false;
-        StopCoroutine(Chasing());
+
+        if (_coroutine != null)
+        {
+            StopCoroutine(Chasing());
+            _coroutine = null;
+        }
     }
 
     private IEnumerator Chasing()
@@ -46,5 +54,7 @@ public class EnemyChase : MonoBehaviour
 
             yield return null;
         }
+
+        _coroutine = null;
     }
 }

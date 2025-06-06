@@ -1,12 +1,17 @@
 using UnityEngine;
 
 [RequireComponent(typeof(Collider2D))]
-public class AidKit : MonoBehaviour
+public class AidKit : MonoBehaviour, ICollectable
 {
-    [field: SerializeField] public float HealingValue { get; private set; } = 25f;
+    [field: SerializeField] public float Value { get; private set; } = 25f;
+
+    private bool _isCollected = false;
 
     public void Collect()
     {
-        gameObject.SetActive(false);
+        if (_isCollected) 
+            return;
+
+        _isCollected = true;
     }
 }

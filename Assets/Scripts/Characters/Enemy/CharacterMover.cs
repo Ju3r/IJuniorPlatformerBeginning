@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(Flipper))]
-public class EnemyMover : MonoBehaviour
+public class CharacterMover : MonoBehaviour
 {
     [SerializeField] private float _baseSpeedX = 0.5f;
     [SerializeField] private float _chaseSpeedX = 1.5f;
@@ -24,5 +24,10 @@ public class EnemyMover : MonoBehaviour
                 _rigidbody.velocity.y);
 
         _flipper.Flip(direction);
+    }
+
+    public Vector2 GetVelocity()
+    {
+        return _rigidbody.velocity;
     }
 }
